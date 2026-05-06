@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>TurboShop — Repuestos en 90 Minutos | Modo Nitro</title>
+<meta name="description" content="TurboShop: la plataforma B2B de repuestos automotrices para talleres en Chile. Accede a miles de productos y recíbelos en 90 minutos en modo nitro."/>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <div class="nav-inner">
+    <!-- LOGO -->
+    <a href="#" class="nav-logo" aria-label="TurboShop inicio">
+      <img src="logo-with-text.svg" alt="TurboShop" class="nav-logo-img" width="160" height="38"/>
+    </a>
+
+    <!-- LINKS CENTRO -->
+    <ul class="nav-links">
+      <li><a href="#como-funciona">¿Cómo funciona?</a></li>
+      <li><a href="#marcas">Marcas</a></li>
+      <li><a href="#opiniones">Opiniones</a></li>
+      <li><a href="https://turboshop.cl/about-us" target="_blank">Nosotros</a></li>
+    </ul>
+
+    <!-- ACCIONES DERECHA -->
+    <div class="nav-actions">
+      <!-- Carrito -->
+      <button class="nav-cart" id="nav-cart-btn" aria-label="Ver carrito">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+        </svg>
+        <span class="cart-badge" id="cart-count" aria-label="0 productos">0</span>
+      </button>
+      <!-- Iniciar sesión -->
+      <a href="https://turboshop.cl/login" class="btn-login" id="btn-login" aria-label="Iniciar sesión">
+        Iniciar sesión
+      </a>
+      <!-- Hamburger (solo mobile) -->
+      <button class="hamburger" id="ham" aria-label="Menú">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mob-menu">
+  <a href="#como-funciona" onclick="closeMob()">¿Cómo funciona?</a>
+  <a href="#marcas" onclick="closeMob()">Marcas</a>
+  <a href="#opiniones" onclick="closeMob()">Opiniones</a>
+  <a href="https://turboshop.cl/about-us" target="_blank" onclick="closeMob()">Nosotros</a>
+  <div class="mobile-actions">
+    <a href="https://turboshop.cl/login" class="btn-login" style="text-align:center;justify-content:center">Iniciar sesión</a>
+    <button class="btn-primary" style="width:100%;justify-content:center" onclick="document.getElementById('cta').scrollIntoView({behavior:'smooth'});closeMob()">Inscribir mi Taller</button>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="inicio">
+  <canvas class="hero-canvas" id="particles"></canvas>
+  <div class="speed-wrap" id="speedwrap"></div>
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-badge" data-a>
+        <span class="dot"></span>
+        Plataforma activa en Chile
+      </div>
+      <h1 data-a>
+        Tus repuestos en<br/>
+        <span class="nitro">90 minutos.</span><br/>
+        <span class="grad">Modo Nitro.</span>
+      </h1>
+      <p class="hero-desc" data-a>
+        La plataforma B2B que conecta talleres con proveedores de repuestos automotrices. Miles de productos, entrega ultra rápida, sin perder tiempo.
+      </p>
+      <div class="hero-actions" data-a>
+        <button class="btn-primary" onclick="document.getElementById('cta').scrollIntoView({behavior:'smooth'})">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M13 2L4.5 13.5H11L10 22L19.5 10.5H13L13 2Z" fill="white"/></svg>
+          Inscribir mi Taller
+        </button>
+        <button class="btn-secondary" onclick="document.getElementById('como-funciona').scrollIntoView({behavior:'smooth'})">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12l4 4 4-4"/></svg>
+          Ver cómo funciona
+        </button>
+      </div>
+      <div class="hero-stats" data-a>
+        <div class="stat">
+          <span class="stat-num" id="cnt1">0</span>
+          <span class="stat-label">Talleres activos</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num" id="cnt2">0</span>
+          <span class="stat-label">Marcas disponibles</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num" id="cnt3">90</span>
+          <span class="stat-label">Minutos de entrega</span>
+        </div>
+      </div>
+    </div>
+    <!-- CARRUSEL HERO -->
+    <div class="hero-visual">
+      <div class="glow-ring"></div>
+      <div class="hero-carousel" id="hero-carousel" aria-label="Imágenes TurboShop">
+        <div class="carousel-track">
+          <div class="carousel-slide active" aria-hidden="false">
+            <img src="ts-landing.webp" alt="Entrega de repuestos TurboShop en taller" loading="eager"/>
+          </div>
+          <div class="carousel-slide" aria-hidden="true">
+            <img src="ts-landing-2.webp" alt="Repartidor TurboShop con mochila térmica" loading="lazy"/>
+          </div>
+        </div>
+        <!-- Dots indicadores -->
+        <div class="carousel-dots" role="tablist" aria-label="Diapositivas">
+          <button class="cdot active" role="tab" aria-selected="true" aria-label="Imagen 1" data-slide="0"></button>
+          <button class="cdot" role="tab" aria-selected="false" aria-label="Imagen 2" data-slide="1"></button>
+        </div>
+        <!-- Badge overlay -->
+        <div class="carousel-badge">
+          <span class="cbadge-dot"></span>
+          Entrega en 90 min ⚡
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="como-funciona">
+  <div class="container">
+    <!-- Título centrado -->
+    <div class="text-center" data-a>
+      <span class="section-tag">¿Cómo funciona?</span>
+      <h2 class="section-title">Tres pasos para el <span class="g">repuesto perfecto</span></h2>
+      <p class="section-sub">Sin vueltas, sin esperas. Así de simple es operar con TurboShop.</p>
+    </div>
+    <!-- Layout 2 columnas: pasos + imagen -->
+    <div class="how-body">
+      <!-- Pasos -->
+      <div class="how-steps" data-a-stagger>
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <div class="step-icon">📋</div>
+            <h3>Inscríbete</h3>
+            <p>Déjanos tu número de contacto y te damos acceso a la plataforma de forma gratuita en minutos.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <div class="step-icon">🛒</div>
+            <h3>Accede y Compra</h3>
+            <p>Navega miles de repuestos compatibles con tu flota. Encuentra exactamente lo que necesitas.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <div class="step-icon">⚡</div>
+            <h3>Modo Nitro</h3>
+            <p>Recibe tu pedido directo en el taller en 90 minutos. Cero pérdida de tiempo, máxima productividad.</p>
+          </div>
+        </div>
+      </div>
+      <!-- Imagen entrega garantizada -->
+      <div class="how-visual" data-a>
+        <div class="guaranteed-wrap">
+          <img
+            src="guaranteed-delivery-in.webp"
+            alt="Entrega garantizada en 90 minutos — TurboShop"
+            class="guaranteed-img"
+            loading="lazy"
+          />
+          <div class="guaranteed-glow"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="ventajas">
+  <div class="container">
+    <div data-a>
+      <span class="section-tag">Ventajas</span>
+      <h2 class="section-title">Todo lo que tu taller <span class="g">necesita</span></h2>
+    </div>
+    <div class="features-grid" data-a-stagger>
+      <div class="feat-card">
+        <div class="feat-icon">⚡</div>
+        <h3>Entrega en 90 minutos</h3>
+        <p>Nuestro sistema logístico garantiza que el repuesto llegue a tu taller en tiempo récord, sin importar la urgencia.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🏷️</div>
+        <h3>Precios imbatibles</h3>
+        <p>Acceso directo a proveedores con precios mayoristas. Ahorra en cada pedido y maximiza el margen de tu negocio.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🕐</div>
+        <h3>Atención 24/7</h3>
+        <p>Nuestro equipo está disponible a cualquier hora. Da igual si es de madrugada, siempre encontrarás respuesta.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🔧</div>
+        <h3>Miles de repuestos</h3>
+        <p>Catálogo completo de repuestos para todas las marcas. Desde filtros hasta piezas de motor, todo en un solo lugar.</p>
+      </div>
+      <div class="feat-card feat-wide">
+        <div class="feat-icon">🤝</div>
+        <h3>Un aliado confiable, no solo un proveedor</h3>
+        <p>TurboShop no solo vende repuestos. Somos el socio estratégico que ayuda a tu taller a operar más eficientemente, con soporte real, precios justos y logística de élite. Resolveremos contigo incluso los casos más difíciles de encontrar.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BRANDS -->
+<section class="brands" id="marcas">
+  <div class="container">
+    <div class="text-center" data-a>
+      <span class="section-tag">Marcas</span>
+      <h2 class="section-title">Repuestos para <span class="g">todas las marcas</span></h2>
+      <p class="section-sub">Manejamos repuestos originales y alternativos para las marcas más populares del mercado chileno.</p>
+    </div>
+    <div class="brands-grid" data-a-stagger>
+      <div class="brand-pill">Toyota</div>
+      <div class="brand-pill">Chevrolet</div>
+      <div class="brand-pill">Nissan</div>
+      <div class="brand-pill">Hyundai</div>
+      <div class="brand-pill">Kia</div>
+      <div class="brand-pill">Ford</div>
+      <div class="brand-pill">Volkswagen</div>
+      <div class="brand-pill">BMW</div>
+      <div class="brand-pill">Mercedes</div>
+      <div class="brand-pill">Honda</div>
+      <div class="brand-pill">Mazda</div>
+      <div class="brand-pill">Mitsubishi</div>
+    </div>
+    <p class="brands-more">¡Y <span>muchas más!</span> Si no encuentras tu marca, contáctanos directamente.</p>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="opiniones">
+  <div class="container">
+    <div class="text-center" data-a>
+      <span class="section-tag">Opiniones</span>
+      <h2 class="section-title">Lo que dicen <span class="g">nuestros talleres</span></h2>
+    </div>
+    <div class="testi-grid" data-a-stagger>
+      <div class="testi-card">
+        <div class="quote-mark">"</div>
+        <div class="stars">★★★★★</div>
+        <h4>No más cachos</h4>
+        <p>En Chile siempre ha sido un enredo comprar repuestos. Con TurboShop tengo todo en un solo lugar, con entregas rápidas. Nos enfocamos en rentabilizar el taller.</p>
+        <div class="testi-author">
+          <div class="testi-avatar">JG</div>
+          <div>
+            <div class="testi-name">José Tomás González</div>
+            <div class="testi-co">Kenner Motorsport</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="quote-mark">"</div>
+        <div class="stars">★★★★★</div>
+        <h4>Siempre disponibles</h4>
+        <p>Lo mejor es que nos atienden a cualquier hora. Da igual si es temprano o tarde, siempre encontramos respuesta y podemos seguir trabajando sin parar.</p>
+        <div class="testi-author">
+          <div class="testi-avatar">AI</div>
+          <div>
+            <div class="testi-name">Alejandro Inostroza</div>
+            <div class="testi-co">La Reina Garage</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="quote-mark">"</div>
+        <div class="stars">★★★★★</div>
+        <h4>Nuestros partners</h4>
+        <p>Al principio teníamos dudas, pero ahora compramos todo ahí, hasta la silicona. El tiempo de entrega y los precios son imbatibles. 100% recomendado.</p>
+        <div class="testi-author">
+          <div class="testi-avatar">NP</div>
+          <div>
+            <div class="testi-name">Nicolás Providel</div>
+            <div class="testi-co">Argomedo Performance</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="quote-mark">"</div>
+        <div class="stars">★★★★★</div>
+        <h4>Un aliado confiable</h4>
+        <p>Resuelven casos donde parecía imposible encontrar repuestos. No solo venden, ofrecen un servicio completo de confianza. Los recomendamos totalmente.</p>
+        <div class="testi-author">
+          <div class="testi-avatar">TA</div>
+          <div>
+            <div class="testi-name">Tobías Abalos</div>
+            <div class="testi-co">Kavak</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="quote-mark">"</div>
+        <div class="stars">★★★★★</div>
+        <h4>La alianza perfecta</h4>
+        <p>Todo en un solo lugar: repuestos, respuestas rápidas y entregas puntuales directo al taller. Se nota que piensan en facilitarle la vida a los talleres.</p>
+        <div class="testi-author">
+          <div class="testi-avatar">RM</div>
+          <div>
+            <div class="testi-name">Reynan Moreno</div>
+            <div class="testi-co">AutoPro</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="quote-mark">"</div>
+        <div class="stars">★★★★★</div>
+        <h4>Precios imbatibles</h4>
+        <p>Gracias a TurboShop redujimos nuestros tiempos de reparación a la mitad. El equipo es profesional, rápido y siempre tienen lo que necesitamos.</p>
+        <div class="testi-author">
+          <div class="testi-avatar">MP</div>
+          <div>
+            <div class="testi-name">Mario Pérez</div>
+            <div class="testi-co">AutoTech Santiago</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta" style="padding:4rem 2rem">
+  <div class="container">
+    <div class="cta-banner" data-a>
+      <span class="section-tag">¿Listo para el Modo Nitro?</span>
+      <h2>Inscribe tu taller <span style="background:linear-gradient(135deg,#6B21E8,#8B45FF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">hoy mismo</span></h2>
+      <p>Únete a los talleres que ya operan más rápido, más barato y sin estrés con TurboShop.</p>
+      <div class="cta-actions">
+        <a href="https://turboshop.cl/" target="_blank" class="btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M13 2L4.5 13.5H11L10 22L19.5 10.5H13L13 2Z" fill="white"/></svg>
+          Inscribirme como Taller
+        </a>
+        <a href="https://turboshop.cl/" target="_blank" class="btn-secondary">
+          Soy Proveedor →
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <h3>Turbo<span>Shop</span></h3>
+      <p>La plataforma que conecta talleres con proveedores de repuestos. Entrega en 90 minutos en toda Chile.</p>
+      <div class="footer-social">
+        <a href="https://www.linkedin.com/company/turbo-shop/" target="_blank" class="soc-btn" aria-label="LinkedIn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Productos</h4>
+      <ul>
+        <li><a href="https://turboshop.cl/">Repuestos</a></li>
+        <li><a href="#">Neumáticos <span class="badge">Pronto</span></a></li>
+        <li><a href="#">Baterías <span class="badge">Pronto</span></a></li>
+        <li><a href="#">Lubricantes <span class="badge">Pronto</span></a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Empresa</h4>
+      <ul>
+        <li><a href="https://turboshop.cl/about-us">Quiénes Somos</a></li>
+        <li><a href="https://turboshop.cl/terms">Términos y Condiciones</a></li>
+        <li><a href="https://turboshop.cl/">Inscribir Taller</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contacto</h4>
+      <ul>
+        <li><a href="mailto:ventas@turboshop.cl">ventas@turboshop.cl</a></li>
+        <li><a href="tel:+56983509065">+56 9 8350 9065</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 TurboShop. Todos los derechos reservados.</p>
+    <p style="color:var(--st);font-size:.8rem">Hecho con ⚡ en Chile</p>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
