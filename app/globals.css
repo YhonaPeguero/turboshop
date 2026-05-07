@@ -21,6 +21,24 @@
   --gs: 0 0 32px rgba(107, 33, 232, 0.45);
   --gh2: 0 8px 48px rgba(107, 33, 232, 0.6);
   --tr: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --background: 240 39% 5%;
+  --foreground: 250 100% 97%;
+  --card: 240 27% 8%;
+  --card-foreground: 250 100% 97%;
+  --popover: 240 27% 8%;
+  --popover-foreground: 250 100% 97%;
+  --primary: 262 82% 52%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 240 31% 13%;
+  --secondary-foreground: 250 100% 97%;
+  --muted: 240 31% 13%;
+  --muted-foreground: 248 19% 68%;
+  --accent: 262 82% 52%;
+  --accent-foreground: 0 0% 100%;
+  --border: 262 63% 43%;
+  --input: 262 63% 43%;
+  --ring: 262 100% 64%;
+  --radius: 1rem;
 }
 
 * {
@@ -302,5 +320,14 @@ img {
 
   .carousel-slide {
     transition: none !important;
+  }
+}
+
+@layer base {
+  .maplibregl-popup-content {
+    @apply bg-transparent! shadow-none! p-0! rounded-none!;
+  }
+  .maplibregl-popup-tip {
+    @apply hidden!;
   }
 }

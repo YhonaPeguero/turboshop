@@ -2,11 +2,15 @@
 
 import { type KeyboardEvent as ReactKeyboardEvent, useEffect, useRef, useState } from 'react';
 
+import { MyMap } from '@/components/my-map';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+
 const phoneNumberDisplay = '+56 9 8350 9065';
 const phoneNumberHref = 'tel:+56983509065';
 const phoneNumberClipboard = '+56983509065';
 const whatsappHref =
   'https://api.whatsapp.com/send/?phone=%2B56983509065&text=Hola%2C+necesito+ayuda+para+encontrar+repuestos+para+mi+mi+veh%C3%ADculo.&type=phone_number&app_absent=0';
+const googleMapsHref = 'https://www.google.com/maps/search/?api=1&query=Av.+Presidente+Kennedy+5770,+Las+Condes,+Santiago,+Chile';
 
 const speedLines = [
   { top: '12%', width: '210px', delay: '0.1s', duration: '3.1s' },
@@ -639,7 +643,7 @@ export default function Home() {
                     src="/guaranteed-delivery-in.webp"
                     alt="Entrega garantizada en 90 minutos — TurboShop"
                     loading="lazy"
-                    className="h-auto w-full rounded-[28px] border border-white/5 transition duration-[600ms] ease-[cubic-bezier(0.2,0.8,0.2,1)]"
+                    className="h-auto w-full rounded-[28px] border border-white/5 transition duration-700 ease-out"
                   />
                   <div className="pointer-events-none absolute inset-0 rounded-[28px] bg-[linear-gradient(135deg,rgba(255,255,255,0.05)_0%,transparent_50%,rgba(107,33,232,0.15)_100%)]" />
                 </div>
@@ -723,6 +727,33 @@ export default function Home() {
                 </article>
               ))}
             </div>
+          </div>
+        </section>
+
+        <section id="ubicacion" className="bg-turbo-surface px-8 py-20">
+          <div className="mx-auto w-full max-w-[1200px]">
+            <div data-a="" className="mb-10 text-center">
+              <span className="section-tag">Ubicación</span>
+              <h2 className="section-title">
+                Ubicación de la <span className="gradient-text">oficina</span>
+              </h2>
+              <p className="section-sub mx-auto">Oficina en Las Condes, cerca de la estación Escuela Militar (Metro de Santiago).</p>
+            </div>
+
+            <Card data-a="" className="overflow-hidden rounded-[28px] border border-[rgba(107,33,232,0.5)] bg-[linear-gradient(135deg,rgba(15,15,26,0.96),rgba(26,10,48,0.92))] text-turbo-text shadow-[0_30px_90px_rgba(107,33,232,0.18)]">
+              <CardHeader className="flex flex-col gap-5 p-5 sm:p-6 lg:flex-row lg:items-center lg:justify-between">
+                <div>
+                  <CardTitle className="font-display text-2xl font-black tracking-[-0.02em] text-turbo-text">Av. Presidente Kennedy 5770</CardTitle>
+                  <CardDescription className="mt-2 text-sm leading-6 text-turbo-muted">Las Condes, Santiago, Región Metropolitana, Chile.</CardDescription>
+                </div>
+                <a href={googleMapsHref} target="_blank" rel="noreferrer" className="btn-primary w-full sm:w-auto">
+                  Abrir en Google Maps
+                </a>
+              </CardHeader>
+              <CardContent className="p-5 pt-0 sm:p-6 sm:pt-0">
+                <MyMap />
+              </CardContent>
+            </Card>
           </div>
         </section>
 
