@@ -1,6 +1,12 @@
 'use client';
 
-import { KeyboardEvent, useEffect, useRef, useState } from 'react';
+import { type KeyboardEvent as ReactKeyboardEvent, useEffect, useRef, useState } from 'react';
+
+const phoneNumberDisplay = '+56 9 8350 9065';
+const phoneNumberHref = 'tel:+56983509065';
+const phoneNumberClipboard = '+56983509065';
+const whatsappHref =
+  'https://api.whatsapp.com/send/?phone=%2B56983509065&text=Hola%2C+necesito+ayuda+para+encontrar+repuestos+para+mi+mi+veh%C3%ADculo.&type=phone_number&app_absent=0';
 
 const speedLines = [
   { top: '12%', width: '210px', delay: '0.1s', duration: '3.1s' },
@@ -159,6 +165,48 @@ function LinkedinIcon() {
   );
 }
 
+function WhatsAppIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M20.52 3.48A11.79 11.79 0 0012.08 0C5.53 0 .2 5.32.2 11.86c0 2.09.55 4.14 1.59 5.95L.1 24l6.34-1.66a11.88 11.88 0 005.64 1.43h.01c6.54 0 11.87-5.32 11.87-11.86 0-3.17-1.23-6.15-3.44-8.43z"
+        fill="currentColor"
+        opacity="0.18"
+      />
+      <path
+        d="M12.09 21.77h-.01a9.86 9.86 0 01-5.03-1.38l-.36-.21-3.76.99 1-3.67-.24-.38a9.78 9.78 0 01-1.5-5.25C2.2 6.43 6.63 2 12.08 2a9.8 9.8 0 016.98 2.9 9.78 9.78 0 012.89 6.96c0 5.45-4.43 9.91-9.86 9.91zm5.42-7.39c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.95 1.17-.17.2-.35.22-.65.07-.3-.15-1.25-.46-2.39-1.47-.88-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.07 2.88 1.22 3.08.15.2 2.1 3.2 5.08 4.49.71.31 1.27.49 1.7.63.71.23 1.36.2 1.88.12.57-.09 1.76-.72 2-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
+function PhoneIcon({ size = 18 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72c.12.9.33 1.77.62 2.61a2 2 0 01-.45 2.11L8.01 9.71a16 16 0 006.28 6.28l1.27-1.27a2 2 0 012.11-.45c.84.29 1.71.5 2.61.62A2 2 0 0122 16.92z" />
+    </svg>
+  );
+}
+
+function CopyIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+      <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+    </svg>
+  );
+}
+
+function CloseIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+      <path d="M18 6L6 18" />
+      <path d="M6 6l12 12" />
+    </svg>
+  );
+}
+
 type Particle = {
   x: number;
   y: number;
@@ -177,6 +225,9 @@ export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [carouselPaused, setCarouselPaused] = useState(false);
   const [carouselResetKey, setCarouselResetKey] = useState(0);
+  const [contactWidgetOpen, setContactWidgetOpen] = useState(false);
+  const [phoneModalOpen, setPhoneModalOpen] = useState(false);
+  const [copiedPhone, setCopiedPhone] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setNavScrolled(window.scrollY > 60);
@@ -318,6 +369,23 @@ export default function Home() {
     return () => window.clearInterval(timer);
   }, [carouselPaused, carouselResetKey]);
 
+  useEffect(() => {
+    if (!phoneModalOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    const onKeyDown = (event: globalThis.KeyboardEvent) => {
+      if (event.key === 'Escape') setPhoneModalOpen(false);
+    };
+
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', onKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, [phoneModalOpen]);
+
   const scrollToId = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
     setMobileOpen(false);
@@ -328,9 +396,24 @@ export default function Home() {
     setCarouselResetKey((previous) => previous + 1);
   };
 
-  const onCarouselKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+  const onCarouselKeyDown = (event: ReactKeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'ArrowLeft') selectSlide(currentSlide - 1);
     if (event.key === 'ArrowRight') selectSlide(currentSlide + 1);
+  };
+
+  const openPhoneModal = () => {
+    setCopiedPhone(false);
+    setPhoneModalOpen(true);
+  };
+
+  const copyPhoneNumber = async () => {
+    try {
+      await navigator.clipboard.writeText(phoneNumberClipboard);
+      setCopiedPhone(true);
+      window.setTimeout(() => setCopiedPhone(false), 1800);
+    } catch {
+      setCopiedPhone(false);
+    }
   };
 
   return (
@@ -735,8 +818,8 @@ export default function Home() {
                 </a>
               </li>
               <li>
-                <a href="tel:+56983509065" className="text-sm text-turbo-muted transition hover:text-turbo-purpleLight">
-                  +56 9 8350 9065
+                <a href={phoneNumberHref} className="text-sm text-turbo-muted transition hover:text-turbo-purpleLight">
+                  {phoneNumberDisplay}
                 </a>
               </li>
             </ul>
@@ -748,6 +831,99 @@ export default function Home() {
           <p className="text-xs text-turbo-subtle">Hecho con ⚡ en Chile</p>
         </div>
       </footer>
+
+      <div className="fixed bottom-5 right-0 z-[1000] sm:bottom-8" aria-label="Opciones de contacto rápido">
+        {contactWidgetOpen ? (
+          <div className="mr-4 flex flex-col items-end gap-3 transition duration-300 sm:mr-8">
+            <button
+              type="button"
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-white text-turbo-subtle shadow-[0_10px_30px_rgba(0,0,0,0.24)] transition hover:text-turbo-purple focus:outline-none focus:ring-2 focus:ring-turbo-purpleLight focus:ring-offset-2 focus:ring-offset-turbo-bg"
+              aria-label="Cerrar opciones de contacto"
+              onClick={() => setContactWidgetOpen(false)}
+            >
+              <CloseIcon />
+            </button>
+
+            <a
+              href={whatsappHref}
+              target="_blank"
+              rel="noreferrer"
+              className="flex min-w-[118px] items-center justify-between gap-3 rounded-full bg-[#48B75C] py-3 pl-5 pr-3 text-sm font-bold text-white shadow-[0_14px_34px_rgba(0,0,0,0.32)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#40A955] focus:outline-none focus:ring-2 focus:ring-[#48B75C] focus:ring-offset-2 focus:ring-offset-turbo-bg"
+            >
+              WhatsApp
+              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/15 text-white">
+                <WhatsAppIcon />
+              </span>
+            </a>
+
+            <button
+              type="button"
+              className="flex min-w-[118px] items-center justify-between gap-3 rounded-full bg-turboGradient py-3 pl-5 pr-3 text-sm font-bold text-white shadow-[0_14px_34px_rgba(0,0,0,0.32)] transition duration-300 hover:-translate-y-0.5 hover:shadow-glowStrong focus:outline-none focus:ring-2 focus:ring-turbo-purpleLight focus:ring-offset-2 focus:ring-offset-turbo-bg"
+              onClick={openPhoneModal}
+            >
+              Hablemos
+              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white/15 text-white">
+                <PhoneIcon />
+              </span>
+            </button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            className="flex min-h-[92px] w-11 flex-col items-center justify-center gap-2 rounded-l-lg bg-[#48B75C] py-3 text-white shadow-[0_12px_34px_rgba(0,0,0,0.28)] transition duration-300 hover:bg-[#40A955] focus:outline-none focus:ring-2 focus:ring-[#48B75C] focus:ring-offset-2 focus:ring-offset-turbo-bg sm:w-12"
+            aria-expanded="false"
+            aria-label="Abrir opciones de contacto"
+            onClick={() => setContactWidgetOpen(true)}
+          >
+            <span className="[writing-mode:vertical-rl] rotate-180 text-xs font-bold leading-none tracking-wide">¿Ayuda?</span>
+            <WhatsAppIcon />
+          </button>
+        )}
+      </div>
+
+      {phoneModalOpen ? (
+        <div
+          className="fixed inset-0 z-[1100] flex items-center justify-center bg-black/65 px-4 backdrop-blur-sm"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="phone-modal-title"
+          onMouseDown={() => setPhoneModalOpen(false)}
+        >
+          <div
+            className="w-full max-w-[360px] rounded-lg border border-white/10 bg-white p-5 text-[#111827] shadow-[0_24px_90px_rgba(0,0,0,0.45)]"
+            onMouseDown={(event) => event.stopPropagation()}
+          >
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h2 id="phone-modal-title" className="font-display text-base font-bold leading-tight text-[#111827]">
+                  Contáctanos por teléfono
+                </h2>
+                <p className="mt-1 text-xs font-medium text-[#667085]">Llámanos para recibir ayuda inmediata con tus repuestos</p>
+              </div>
+              <button type="button" className="rounded-full p-1 text-[#667085] transition hover:bg-black/5 hover:text-[#111827]" aria-label="Cerrar modal" onClick={() => setPhoneModalOpen(false)}>
+                <CloseIcon />
+              </button>
+            </div>
+
+            <a
+              href={phoneNumberHref}
+              className="mt-7 flex w-full items-center justify-center gap-3 rounded-lg border border-[#CBEBD2] bg-[#E7F5EA] px-4 py-4 font-mono text-sm font-bold tracking-[0.08em] text-[#2C8D47] transition hover:border-[#8BD19A] hover:bg-[#DDF1E2]"
+            >
+              <PhoneIcon size={17} />
+              {phoneNumberDisplay}
+            </a>
+
+            <button
+              type="button"
+              className="mt-4 flex w-full items-center justify-center gap-2 rounded-md border border-[#4CAF61] bg-white px-4 py-2.5 text-sm font-medium text-[#2C8D47] transition hover:bg-[#F2FBF4]"
+              onClick={copyPhoneNumber}
+            >
+              <CopyIcon />
+              {copiedPhone ? 'Número copiado' : 'Copiar número'}
+            </button>
+          </div>
+        </div>
+      ) : null}
     </>
   );
 }
