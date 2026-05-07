@@ -1,6 +1,6 @@
 'use client';
 
-import { type KeyboardEvent as ReactKeyboardEvent, useEffect, useRef, useState } from 'react';
+import { type FormEvent, type KeyboardEvent as ReactKeyboardEvent, useEffect, useRef, useState } from 'react';
 
 import { MyMap } from '@/components/my-map';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -286,6 +286,10 @@ export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [carouselPaused, setCarouselPaused] = useState(false);
   const [carouselResetKey, setCarouselResetKey] = useState(0);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [heroSearchMode, setHeroSearchMode] = useState<'plate' | 'model'>('plate');
+  const [plateSearch, setPlateSearch] = useState('');
+  const [vehicleSearch, setVehicleSearch] = useState({ brand: '', model: '', year: '', engine: '' });
   const [contactWidgetOpen, setContactWidgetOpen] = useState(false);
   const [phoneModalOpen, setPhoneModalOpen] = useState(false);
   const [copiedPhone, setCopiedPhone] = useState(false);
@@ -447,6 +451,17 @@ export default function Home() {
     };
   }, [phoneModalOpen]);
 
+  useEffect(() => {
+    if (!mobileOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [mobileOpen]);
+
   const scrollToId = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
     setMobileOpen(false);
@@ -460,6 +475,29 @@ export default function Home() {
   const onCarouselKeyDown = (event: ReactKeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'ArrowLeft') selectSlide(currentSlide - 1);
     if (event.key === 'ArrowRight') selectSlide(currentSlide + 1);
+  };
+
+  const submitPartSearch = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const query = searchTerm.trim();
+    const text = query
+      ? `Hola, necesito ayuda para encontrar este repuesto u OEM: ${query}.`
+      : 'Hola, necesito ayuda para encontrar repuestos para mi vehículo.';
+    const url = `https://api.whatsapp.com/send/?phone=%2B56983509065&text=${encodeURIComponent(text)}&type=phone_number&app_absent=0`;
+    window.open(url, '_blank', 'noopener,noreferrer');
+    setMobileOpen(false);
+  };
+
+  const submitHeroSearch = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const text =
+      heroSearchMode === 'plate'
+        ? `Hola, necesito ayuda para encontrar repuestos para la patente: ${plateSearch.trim().toUpperCase() || 'sin especificar'}.`
+        : `Hola, necesito ayuda para encontrar repuestos por modelo. Marca: ${vehicleSearch.brand.trim() || 'sin especificar'}, modelo: ${vehicleSearch.model.trim() || 'sin especificar'}, año: ${vehicleSearch.year.trim() || 'sin especificar'}, motor: ${vehicleSearch.engine.trim() || 'sin especificar'}.`;
+
+    const url = `https://api.whatsapp.com/send/?phone=%2B56983509065&text=${encodeURIComponent(text)}&type=phone_number&app_absent=0`;
+    window.open(url, '_blank', 'noopener,noreferrer');
   };
 
   const openPhoneModal = () => {
@@ -490,28 +528,21 @@ export default function Home() {
             <img src="/logo-with-text.svg" alt="TurboShop" className="h-9 w-auto" width="160" height="38" />
           </a>
 
-          <ul className="hidden list-none items-center justify-center gap-5 md:flex min-[1025px]:gap-8">
-            <li>
-              <a href="#como-funciona" className="nav-link">
-                ¿Cómo funciona?
-              </a>
-            </li>
-            <li>
-              <a href="#marcas" className="nav-link">
-                Marcas
-              </a>
-            </li>
-            <li>
-              <a href="#opiniones" className="nav-link">
-                Opiniones
-              </a>
-            </li>
-            <li>
-              <a href="https://turboshop.cl/about-us" target="_blank" rel="noreferrer" className="nav-link">
-                Nosotros
-              </a>
-            </li>
-          </ul>
+          <form onSubmit={submitPartSearch} className="hidden min-w-0 items-center justify-center md:flex" role="search" aria-label="Buscar repuestos">
+            <div className="flex w-full max-w-[520px] items-center gap-2 rounded-2xl border border-[rgba(107,33,232,0.28)] bg-white/[0.04] p-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-xl">
+              <input
+                type="search"
+                value={searchTerm}
+                onChange={(event) => setSearchTerm(event.target.value)}
+                placeholder="Ingrese OEM o nombre de repuesto"
+                className="min-w-0 flex-1 bg-transparent px-3 py-2 text-sm text-turbo-text outline-none placeholder:text-turbo-muted/75"
+                aria-label="Ingrese OEM o nombre de repuesto"
+              />
+              <button type="submit" className="rounded-xl bg-turbo-green px-5 py-2 text-sm font-bold text-white transition duration-300 hover:bg-turbo-greenDark focus:outline-none focus:ring-2 focus:ring-turbo-green focus:ring-offset-2 focus:ring-offset-turbo-bg">
+                Buscar
+              </button>
+            </div>
+          </form>
 
           <div className="flex shrink-0 items-center justify-end gap-3">
             <button
@@ -544,8 +575,24 @@ export default function Home() {
 
       <div
         id="mob-menu"
-        className={`${mobileOpen ? 'flex' : 'hidden'} fixed left-0 right-0 top-16 z-[998] flex-col gap-5 border-b border-[var(--brd)] bg-[rgba(7,7,16,0.98)] px-8 py-6 backdrop-blur-[20px] md:hidden`}
+        className={`${mobileOpen ? 'flex' : 'hidden'} fixed inset-x-0 bottom-0 top-[64px] z-[998] w-screen flex-col gap-5 overflow-y-auto border-t border-[var(--brd)] bg-[rgba(7,7,16,0.98)] px-5 py-6 backdrop-blur-[20px] md:hidden`}
       >
+        <form onSubmit={submitPartSearch} className="flex flex-col gap-3" role="search" aria-label="Buscar repuestos">
+          <input
+            type="search"
+            value={searchTerm}
+            onChange={(event) => setSearchTerm(event.target.value)}
+            placeholder="OEM o nombre de repuesto"
+            className="w-full rounded-2xl border border-[rgba(107,33,232,0.35)] bg-white/[0.05] px-4 py-3 text-sm text-turbo-text outline-none placeholder:text-turbo-muted/75 focus:border-turbo-purpleLight"
+            aria-label="OEM o nombre de repuesto"
+          />
+          <button type="submit" className="btn-primary w-full py-3">
+            Buscar repuesto
+          </button>
+        </form>
+
+        <div className="h-px bg-[var(--brd)]" />
+
         <button type="button" className="text-left font-medium text-turbo-muted transition hover:text-turbo-text" onClick={() => scrollToId('como-funciona')}>
           ¿Cómo funciona?
         </button>
@@ -569,7 +616,7 @@ export default function Home() {
       </div>
 
       <main>
-        <section id="inicio" className="relative flex min-h-screen items-center overflow-hidden bg-heroGradient px-8 pb-16 pt-28">
+        <section id="inicio" className="relative overflow-hidden bg-heroGradient px-5 pb-12 pt-24 sm:px-8 lg:flex lg:min-h-[calc(100svh-64px)] lg:items-center lg:px-10 lg:pb-14 lg:pt-28 xl:px-12">
           <canvas ref={canvasRef} className="pointer-events-none absolute inset-0 h-full w-full" aria-hidden="true" />
           <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
             {speedLines.map((line, index) => (
@@ -580,57 +627,117 @@ export default function Home() {
               />
             ))}
           </div>
+          <div className="pointer-events-none absolute inset-0 opacity-[0.035] [background-image:linear-gradient(rgba(255,255,255,0.75)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.75)_1px,transparent_1px)] [background-size:64px_64px]" />
+          <div className="pointer-events-none absolute left-[8%] top-28 hidden h-24 w-24 rounded-full border border-turbo-purpleLight/20 lg:block" />
+          <div className="pointer-events-none absolute bottom-20 right-[10%] hidden h-36 w-36 rounded-full bg-turbo-green/10 blur-3xl lg:block" />
 
-          <div className="relative z-[1] mx-auto grid w-full max-w-[1200px] grid-cols-1 items-center gap-16 text-center min-[1025px]:grid-cols-2 min-[1025px]:text-left">
-            <div>
-              <div data-a="" className="mb-6 inline-flex items-center gap-2 rounded-full border border-[rgba(107,33,232,0.5)] bg-[rgba(107,33,232,0.15)] px-4 py-1.5 text-sm font-semibold text-turbo-purpleLight">
-                <span className="pulse-dot h-[7px] w-[7px] rounded-full bg-turbo-green" />
-                Plataforma activa en Chile
-              </div>
+          <div className="relative z-[1] mx-auto w-full max-w-[1360px] 2xl:max-w-[1440px]">
+            <div className="hero-stage relative grid grid-cols-1 items-center gap-10 text-center min-[1025px]:grid-cols-[minmax(460px,0.86fr)_minmax(640px,1.14fr)] min-[1025px]:gap-8 min-[1025px]:text-left xl:gap-12">
+              <div className="hero-route-beam" aria-hidden="true" />
+              <div className="relative mx-auto w-full max-w-[600px] min-[1025px]:mx-0 xl:max-w-[620px]">
+                <div className="pointer-events-none absolute -inset-3 rounded-[34px] bg-[radial-gradient(circle_at_20%_0%,rgba(139,69,255,0.24),transparent_38%),radial-gradient(circle_at_85%_85%,rgba(34,197,94,0.18),transparent_36%)] blur-xl" />
 
-              <h1 data-a="" className="mb-5 font-display text-[clamp(2.4rem,5vw,4.2rem)] font-black leading-[1.08] tracking-[-0.03em]">
-                Tus repuestos en
-                <br />
-                <span className="nitro-text">90 minutos.</span>
-                <br />
-                <span className="gradient-text">Modo Nitro.</span>
-              </h1>
+              <form data-a="" onSubmit={submitHeroSearch} className="hero-search-card relative overflow-hidden rounded-[30px] border border-[rgba(107,33,232,0.42)] bg-[linear-gradient(145deg,rgba(22,22,42,0.95),rgba(15,15,26,0.98))] text-left shadow-[0_28px_80px_rgba(107,33,232,0.18)]">
+                <div className="border-b border-[var(--brd)] p-4 sm:p-5 xl:p-6">
+                  <div className="mb-4 flex items-start justify-between gap-4">
+                    <div>
+                      <h2 className="font-display text-2xl font-black tracking-[-0.03em] text-turbo-text">Busca tus repuestos</h2>
+                      <p className="mt-1 text-sm leading-6 text-turbo-muted">Identifica el vehículo y te ayudamos a encontrar la pieza correcta.</p>
+                    </div>
+                    <span className="hidden rounded-full border border-[rgba(34,197,94,0.28)] bg-[rgba(34,197,94,0.1)] px-3 py-1 text-xs font-black uppercase tracking-[0.12em] text-turbo-green sm:inline-flex">Nitro</span>
+                  </div>
 
-              <p data-a="" className="mx-auto mb-8 max-w-[480px] text-[1.1rem] leading-7 text-turbo-muted min-[1025px]:mx-0">
-                La plataforma B2B que conecta talleres con proveedores de repuestos automotrices. Miles de productos, entrega ultra rápida, sin perder tiempo.
-              </p>
-
-              <div data-a="" className="mb-10 flex flex-wrap justify-center gap-4 min-[1025px]:justify-start">
-                <button type="button" className="btn-primary" onClick={() => scrollToId('cta')}>
-                  <BoltIcon />
-                  Inscribir mi Taller
-                </button>
-                <button type="button" className="btn-secondary" onClick={() => scrollToId('como-funciona')}>
-                  <DownIcon />
-                  Ver cómo funciona
-                </button>
-              </div>
-
-              <div data-a="" ref={statsRef} className="flex flex-col justify-center gap-4 md:flex-row md:gap-8 min-[1025px]:justify-start">
-                <div className="flex flex-col">
-                  <span className="gradient-text font-display text-3xl font-black">{counts.workshops}+</span>
-                  <span className="text-xs font-medium text-turbo-muted">Talleres activos</span>
+                  <div className="grid grid-cols-2 rounded-full border border-[rgba(107,33,232,0.4)] bg-[rgba(7,7,16,0.65)] p-1.5">
+                    <button
+                      type="button"
+                      className={`rounded-full px-4 py-2.5 text-sm font-bold transition duration-300 xl:py-3 ${heroSearchMode === 'plate' ? 'bg-turboGradient text-white shadow-glow' : 'text-turbo-purpleLight hover:bg-white/[0.04]'}`}
+                      aria-pressed={heroSearchMode === 'plate'}
+                      onClick={() => setHeroSearchMode('plate')}
+                    >
+                      Por patente
+                    </button>
+                    <button
+                      type="button"
+                      className={`rounded-full px-4 py-2.5 text-sm font-bold transition duration-300 xl:py-3 ${heroSearchMode === 'model' ? 'bg-turboGradient text-white shadow-glow' : 'text-turbo-purpleLight hover:bg-white/[0.04]'}`}
+                      aria-pressed={heroSearchMode === 'model'}
+                      onClick={() => setHeroSearchMode('model')}
+                    >
+                      Por modelo
+                    </button>
+                  </div>
                 </div>
-                <div className="flex flex-col">
-                  <span className="gradient-text font-display text-3xl font-black">{counts.brands}+</span>
-                  <span className="text-xs font-medium text-turbo-muted">Marcas disponibles</span>
+
+                <div className="p-4 sm:p-5 xl:p-6">
+                  {heroSearchMode === 'plate' ? (
+                    <div className="space-y-4">
+                      <div>
+                        <h3 className="font-display text-lg font-black text-turbo-text">Seleccione un vehículo</h3>
+                        <p className="mt-1 text-sm leading-6 text-turbo-muted">Ingresa la patente para consultar repuestos compatibles con tu auto.</p>
+                      </div>
+                      <div className="grid gap-3 sm:grid-cols-[1fr_auto]">
+                        <label className="block">
+                          <span className="mb-2 block text-sm font-bold text-turbo-text">Patente</span>
+                          <input
+                            value={plateSearch}
+                            onChange={(event) => setPlateSearch(event.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 8))}
+                            placeholder="ABCD12"
+                            className="w-full rounded-xl border border-[rgba(107,33,232,0.35)] bg-white/[0.06] px-4 py-3 text-sm font-bold uppercase tracking-[0.12em] text-turbo-text outline-none placeholder:tracking-normal placeholder:text-turbo-muted/70 focus:border-turbo-purpleLight xl:py-3.5"
+                          />
+                        </label>
+                        <button type="submit" className="btn-primary self-end px-5 py-3 xl:px-6 xl:py-3.5">
+                          Buscar repuestos
+                        </button>
+                      </div>
+                      <button type="button" className="text-sm font-semibold text-turbo-purpleLight underline-offset-4 hover:underline" onClick={() => setPlateSearch('')}>
+                        Limpiar patente
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      <div>
+                        <h3 className="font-display text-lg font-black text-turbo-text">Datos del vehículo</h3>
+                        <p className="mt-1 text-sm leading-6 text-turbo-muted">Completa lo que sepas. Con eso buscamos la mejor alternativa.</p>
+                      </div>
+                      <div className="grid gap-3 sm:grid-cols-2">
+                        {[
+                          ['brand', 'Marca', 'Ej: Toyota'],
+                          ['model', 'Modelo', 'Ej: Corolla'],
+                          ['year', 'Año', 'Ej: 2020'],
+                          ['engine', 'Motor', 'Ej: 1.8'],
+                        ].map(([key, label, placeholder]) => (
+                          <label key={key} className="block">
+                            <span className="mb-2 block text-sm font-bold text-turbo-text">{label}</span>
+                            <input
+                              value={vehicleSearch[key as keyof typeof vehicleSearch]}
+                              onChange={(event) => setVehicleSearch((previous) => ({ ...previous, [key]: event.target.value }))}
+                              placeholder={placeholder}
+                              className="w-full rounded-xl border border-[rgba(107,33,232,0.35)] bg-white/[0.06] px-4 py-3 text-sm text-turbo-text outline-none placeholder:text-turbo-muted/70 focus:border-turbo-purpleLight xl:py-3.5"
+                            />
+                          </label>
+                        ))}
+                      </div>
+                      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                        <button type="submit" className="btn-primary px-5 py-3 xl:px-6 xl:py-3.5">
+                          Buscar repuestos
+                        </button>
+                        <button type="button" className="text-sm font-semibold text-turbo-purpleLight underline-offset-4 hover:underline" onClick={() => setVehicleSearch({ brand: '', model: '', year: '', engine: '' })}>
+                          Limpiar vehículo
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
-                <div className="flex flex-col">
-                  <span className="gradient-text font-display text-3xl font-black">{counts.minutes}</span>
-                  <span className="text-xs font-medium text-turbo-muted">Minutos de entrega</span>
-                </div>
-              </div>
+              </form>
             </div>
 
-            <div className="hero-visual-mobile-hidden relative flex items-center justify-center">
-              <div className="glow-ring pointer-events-none absolute z-0 h-[340px] w-[340px] rounded-full" />
+            <div className="hero-visual-mobile-hidden relative flex items-center justify-center min-[1025px]:justify-end">
+              <div className="glow-ring pointer-events-none absolute z-0 h-[380px] w-[380px] rounded-full xl:h-[460px] xl:w-[460px]" />
+              <div className="hero-float absolute -right-3 -top-4 z-20 hidden rounded-2xl border border-white/10 bg-[rgba(15,15,26,0.82)] px-4 py-3 text-left shadow-[0_18px_45px_rgba(0,0,0,0.28)] backdrop-blur-xl lg:block">
+                <div className="text-[0.65rem] font-black uppercase tracking-[0.14em] text-turbo-green">Búsqueda rápida</div>
+                <div className="mt-1 text-sm font-bold text-white">Patente · OEM · Modelo</div>
+              </div>
               <div
-                className="hero-carousel relative z-[1] aspect-video w-full max-w-[480px] overflow-hidden rounded-[28px] bg-turbo-surface2 min-[1025px]:max-w-[640px]"
+                className="hero-carousel relative z-[1] aspect-video w-full max-w-[620px] overflow-hidden rounded-[28px] bg-turbo-surface2 min-[1025px]:max-w-[760px] 2xl:max-w-[800px]"
                 aria-label="Imágenes TurboShop"
                 onMouseEnter={() => setCarouselPaused(true)}
                 onMouseLeave={() => setCarouselPaused(false)}
@@ -664,6 +771,26 @@ export default function Home() {
                   Entrega en 90 min ⚡
                 </div>
               </div>
+            </div>
+            </div>
+
+            <div data-a-stagger="" className="mt-8 grid grid-cols-1 gap-3 text-left sm:grid-cols-3">
+              {[
+                ['01', 'Busca', 'Patente, OEM o modelo'],
+                ['02', 'Validamos', 'Compatibilidad real'],
+                ['03', 'Recibes', 'Entrega modo nitro'],
+              ].map(([number, title, body]) => (
+                <div key={number} className="group relative overflow-hidden rounded-2xl border border-[rgba(107,33,232,0.22)] bg-white/[0.035] p-4 backdrop-blur-sm transition duration-300 hover:border-turbo-purpleLight hover:bg-white/[0.055]">
+                  <div className="absolute -right-8 -top-8 h-20 w-20 rounded-full bg-turbo-purple/20 blur-2xl transition duration-300 group-hover:bg-turbo-green/20" />
+                  <div className="relative flex items-center gap-3">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-turboGradient font-display text-sm font-black text-white shadow-glow">{number}</span>
+                    <div>
+                      <div className="font-display text-base font-black text-turbo-text">{title}</div>
+                      <div className="text-xs font-medium text-turbo-muted">{body}</div>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </section>
