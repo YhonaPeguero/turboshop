@@ -15,9 +15,13 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: 'TurboShop — Repuestos en 90 Minutos | Modo Nitro',
+  title: 'TurboShop Repuestos en 90 Minutos | Modo Nitro',
   description:
     'TurboShop: la plataforma B2B de repuestos automotrices para talleres en Chile. Accede a miles de productos y recíbelos en 90 minutos en modo nitro.',
+  icons: {
+    icon: '/favicon.svg',
+    shortcut: '/favicon.svg',
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
