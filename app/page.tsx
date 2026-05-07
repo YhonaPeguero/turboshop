@@ -60,33 +60,80 @@ const steps = [
 const features = [
   {
     icon: '⚡',
+    eyebrow: 'Logística Nitro',
     title: 'Entrega en 90 minutos',
-    body: 'Nuestro sistema logístico garantiza que el repuesto llegue a tu taller en tiempo récord, sin importar la urgencia.',
+    body: 'Recibe repuestos directo en tu taller cuando la urgencia no puede esperar.',
+    metric: '90',
+    metricUnit: 'min',
+    proof: 'Entrega directa al taller',
+    accent: '#22C55E',
   },
   {
     icon: '🏷️',
+    eyebrow: 'Compra inteligente',
     title: 'Precios imbatibles',
-    body: 'Acceso directo a proveedores con precios mayoristas. Ahorra en cada pedido y maximiza el margen de tu negocio.',
+    body: 'Accede a precios competitivos y mejora el margen de cada reparación.',
+    metric: 'Mayorista',
+    metricUnit: 'sin vueltas',
+    proof: 'Mejor margen por reparación',
+    accent: '#8B45FF',
   },
   {
     icon: '🕐',
+    eyebrow: 'Siempre disponibles',
     title: 'Atención 24/7',
-    body: 'Nuestro equipo está disponible a cualquier hora. Da igual si es de madrugada, siempre encontrarás respuesta.',
+    body: 'Soporte disponible cuando tu taller necesita una respuesta rápida.',
+    metric: '24/7',
+    metricUnit: 'soporte',
+    proof: 'Respuesta cuando el auto está detenido',
+    accent: '#22C55E',
   },
   {
     icon: '🔧',
+    eyebrow: 'Catálogo amplio',
     title: 'Miles de repuestos',
-    body: 'Catálogo completo de repuestos para todas las marcas. Desde filtros hasta piezas de motor, todo en un solo lugar.',
+    body: 'Encuentra repuestos originales y alternativos en un solo lugar.',
+    metric: '+40',
+    metricUnit: 'marcas',
+    proof: 'Originales y alternativos',
+    accent: '#FFB800',
   },
   {
     icon: '🤝',
+    eyebrow: 'Partner operativo',
     title: 'Un aliado confiable, no solo un proveedor',
-    body: 'TurboShop no solo vende repuestos. Somos el socio estratégico que ayuda a tu taller a operar más eficientemente, con soporte real, precios justos y logística de élite. Resolveremos contigo incluso los casos más difíciles de encontrar.',
-    wide: true,
+    body: 'Te ayudamos a resolver incluso los casos difíciles de encontrar.',
+    metric: '1 equipo',
+    metricUnit: 'contigo',
+    proof: 'Casos difíciles también se gestionan',
+    accent: '#6B21E8',
+  },
+  {
+    icon: '🔎',
+    eyebrow: 'Compatibilidad',
+    title: 'Pieza correcta',
+    body: 'Te orientamos para elegir el repuesto compatible sin perder tiempo.',
+    metric: 'Match',
+    metricUnit: 'rápido',
+    proof: 'Menos errores de compra',
+    accent: '#38BDF8',
   },
 ];
 
-const brands = ['Toyota', 'Chevrolet', 'Nissan', 'Hyundai', 'Kia', 'Ford', 'Volkswagen', 'BMW', 'Mercedes', 'Honda', 'Mazda', 'Mitsubishi'];
+const brands = [
+  { name: 'Toyota', logoSlug: 'toyota', accent: '#EB0A1E' },
+  { name: 'Chevrolet', logoSlug: 'chevrolet', accent: '#D8A31A' },
+  { name: 'Nissan', logoSlug: 'nissan', accent: '#C3002F' },
+  { name: 'Hyundai', logoSlug: 'hyundai', accent: '#002C5F' },
+  { name: 'Kia', logoSlug: 'kia', accent: '#BB162B' },
+  { name: 'Ford', logoSlug: 'ford', accent: '#003478' },
+  { name: 'Volkswagen', logoSlug: 'volkswagen', accent: '#00B1EB' },
+  { name: 'BMW', logoSlug: 'bmw', accent: '#1C69D4' },
+  { name: 'Mercedes', accent: '#C7C7C7' },
+  { name: 'Honda', logoSlug: 'honda', accent: '#E40521' },
+  { name: 'Mazda', logoSlug: 'mazda', accent: '#9CA3AF' },
+  { name: 'Mitsubishi', logoSlug: 'mitsubishi', accent: '#ED0000' },
+];
 
 const testimonials = [
   {
@@ -207,6 +254,16 @@ function CloseIcon() {
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
       <path d="M18 6L6 18" />
       <path d="M6 6l12 12" />
+    </svg>
+  );
+}
+
+function MercedesMark() {
+  return (
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" aria-hidden="true" className="text-turbo-text">
+      <circle cx="24" cy="24" r="19" stroke="currentColor" strokeWidth="2.2" opacity="0.9" />
+      <path d="M24 7.5V24M24 24L10.5 35M24 24l13.5 11" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx="24" cy="24" r="2.2" fill="currentColor" />
     </svg>
   );
 }
@@ -611,68 +668,154 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="como-funciona" className="bg-turbo-surface px-8 py-20">
-          <div className="mx-auto w-full max-w-[1200px]">
-            <div data-a="" className="text-center">
+        <section id="como-funciona" className="relative overflow-hidden bg-turbo-surface px-5 py-20 sm:px-8 lg:py-24">
+          <div className="pointer-events-none absolute left-0 top-0 h-72 w-72 rounded-full bg-turbo-purple/20 blur-[110px]" />
+          <div className="pointer-events-none absolute bottom-0 right-0 h-80 w-80 rounded-full bg-turbo-green/10 blur-[120px]" />
+          <div className="pointer-events-none absolute inset-0 opacity-[0.035] [background-image:linear-gradient(rgba(255,255,255,0.65)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.65)_1px,transparent_1px)] [background-size:52px_52px]" />
+
+          <div className="relative mx-auto w-full max-w-[1200px]">
+            <div data-a="" className="mx-auto max-w-3xl text-center">
               <span className="section-tag">¿Cómo funciona?</span>
               <h2 className="section-title">
-                Tres pasos para el <span className="gradient-text">repuesto perfecto</span>
+                Un flujo simple para activar el <span className="gradient-text">Modo Nitro</span>
               </h2>
-              <p className="section-sub mx-auto">Sin vueltas, sin esperas. Así de simple es operar con TurboShop.</p>
+              <p className="section-sub mx-auto">De la inscripción a la entrega, todo está pensado para que tu taller deje de perder tiempo buscando repuestos.</p>
             </div>
 
-            <div className="mt-16 grid grid-cols-1 items-center gap-8 min-[1025px]:grid-cols-[1.2fr_1fr] min-[1025px]:gap-16">
-              <div data-a-stagger="" className="flex flex-col gap-6">
-                {steps.map((step) => (
-                  <div key={step.number} className="step-card flex items-start gap-6 rounded-[20px] border border-[var(--brd)] bg-turbo-surface2 p-8 text-left">
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-turboGradient font-display text-lg font-black text-white shadow-glow">
-                      {step.number}
-                    </div>
-                    <div className="flex flex-col gap-1">
-                      <div className="mb-1 text-2xl">{step.icon}</div>
-                      <h3 className="font-display text-lg font-bold">{step.title}</h3>
-                      <p className="text-[0.95rem] leading-6 text-turbo-muted">{step.body}</p>
-                    </div>
-                  </div>
-                ))}
+            <div className="mt-16 grid grid-cols-1 items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+              <div className="relative">
+                <div className="absolute bottom-12 left-6 top-12 hidden w-px overflow-hidden rounded-full bg-[linear-gradient(180deg,rgba(139,69,255,0),rgba(139,69,255,0.85),rgba(34,197,94,0.85),rgba(139,69,255,0))] sm:block">
+                  <div className="h-20 w-px animate-pulse bg-white/70" />
+                </div>
+
+                <div data-a-stagger="" className="relative flex flex-col gap-5">
+                  {steps.map((step, index) => (
+                    <article key={step.number} className="group grid grid-cols-[auto_1fr] items-stretch gap-4 text-left sm:gap-6">
+                      <div className="relative z-[1] flex flex-col items-center pt-5">
+                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-white/15 bg-turboGradient font-display text-base font-black text-white shadow-[0_0_0_8px_rgba(107,33,232,0.12),0_0_32px_rgba(107,33,232,0.45)] transition duration-300 group-hover:scale-105">
+                          {step.number}
+                        </div>
+                      </div>
+
+                      <div className="relative overflow-hidden rounded-[24px] border border-[var(--brd)] bg-[linear-gradient(135deg,rgba(22,22,42,0.95),rgba(15,15,26,0.9))] p-5 shadow-[0_18px_55px_rgba(0,0,0,0.22)] transition duration-300 group-hover:-translate-y-1 group-hover:border-turbo-purpleLight group-hover:shadow-glow sm:p-6">
+                        <span className="absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                        <span className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-turbo-purpleLight/20 blur-2xl transition duration-300 group-hover:bg-turbo-green/20" />
+
+                        <div className="relative flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                          <div className="flex items-start gap-4">
+                            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-[var(--brd)] bg-[rgba(107,33,232,0.14)] text-2xl shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
+                              {step.icon}
+                            </div>
+                            <div>
+                              <div className="mb-2 flex flex-wrap items-center gap-2">
+                                <span className="rounded-full border border-[rgba(34,197,94,0.28)] bg-[rgba(34,197,94,0.1)] px-2.5 py-1 text-[0.68rem] font-black uppercase tracking-[0.12em] text-turbo-green">
+                                  Paso 0{index + 1}
+                                </span>
+                                {index === 2 ? <span className="rounded-full bg-turbo-purple/20 px-2.5 py-1 text-[0.68rem] font-bold uppercase tracking-[0.12em] text-turbo-purpleLight">90 min</span> : null}
+                              </div>
+                              <h3 className="font-display text-xl font-black tracking-[-0.02em] text-turbo-text">{step.title}</h3>
+                              <p className="mt-2 max-w-xl text-[0.95rem] leading-6 text-turbo-muted">{step.body}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+
+                <div data-a="" className="mt-7 flex flex-col gap-3 rounded-[22px] border border-[rgba(34,197,94,0.22)] bg-[rgba(34,197,94,0.06)] p-4 sm:flex-row sm:items-center sm:justify-between">
+                  <p className="text-sm font-medium text-turbo-muted">
+                    <span className="font-bold text-turbo-text">Sin fricción:</span> te contactamos, activamos acceso y coordinamos la entrega directo al taller.
+                  </p>
+                  <button type="button" className="btn-primary shrink-0 px-6 py-3" onClick={() => scrollToId('cta')}>
+                    Quiero saber más
+                  </button>
+                </div>
               </div>
 
-              <div data-a="" className="flex items-center justify-center max-[1024px]:order-2">
-                <div className="guaranteed-wrap relative w-full max-w-[340px] shrink-0 overflow-hidden rounded-[28px] md:max-w-[380px] min-[1025px]:max-w-[440px]">
-                  <img
-                    src="/guaranteed-delivery-in.webp"
-                    alt="Entrega garantizada en 90 minutos — TurboShop"
-                    loading="lazy"
-                    className="h-auto w-full rounded-[28px] border border-white/5 transition duration-700 ease-out"
-                  />
-                  <div className="pointer-events-none absolute inset-0 rounded-[28px] bg-[linear-gradient(135deg,rgba(255,255,255,0.05)_0%,transparent_50%,rgba(107,33,232,0.15)_100%)]" />
+              <div data-a="" className="flex items-center justify-center lg:justify-end">
+                <div className="relative w-full max-w-[460px]">
+                  <div className="absolute -left-5 top-12 hidden h-[72%] w-16 rounded-full border-l border-dashed border-turbo-purpleLight/45 lg:block" />
+                  <div className="absolute -right-6 -top-6 h-32 w-32 rounded-full bg-turbo-green/20 blur-3xl" />
+                  <div className="absolute -bottom-6 left-2 h-40 w-40 rounded-full bg-turbo-purple/25 blur-3xl" />
+
+                  <div className="guaranteed-wrap relative overflow-hidden rounded-[32px] border border-[rgba(107,33,232,0.38)] bg-[linear-gradient(145deg,rgba(15,15,26,0.96),rgba(26,10,48,0.86))] p-3 shadow-[0_40px_90px_rgba(107,33,232,0.26)]">
+                    <div className="mb-3 flex items-center justify-between gap-3 px-1">
+                      <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-black uppercase tracking-[0.12em] text-white">Modo Nitro</span>
+                      <span className="text-xs font-semibold text-turbo-muted">Santiago RM</span>
+                    </div>
+                    <div className="relative overflow-hidden rounded-[24px]">
+                      <img
+                        src="/guaranteed-delivery-in.webp"
+                        alt="Entrega garantizada en 90 minutos — TurboShop"
+                        loading="lazy"
+                        className="h-auto w-full rounded-[24px] border border-white/5 transition duration-700 ease-out"
+                      />
+                      <div className="pointer-events-none absolute inset-0 rounded-[24px] bg-[linear-gradient(135deg,rgba(255,255,255,0.06)_0%,transparent_45%,rgba(107,33,232,0.18)_100%)]" />
+                    </div>
+                    <div className="relative mt-3 grid grid-cols-2 gap-3">
+                      <div className="rounded-2xl border border-white/10 bg-[rgba(7,7,16,0.72)] p-3 backdrop-blur-xl">
+                        <div className="gradient-text font-display text-2xl font-black">90</div>
+                        <div className="text-xs font-semibold text-turbo-muted">minutos objetivo</div>
+                      </div>
+                      <div className="rounded-2xl border border-white/10 bg-[rgba(7,7,16,0.72)] p-3 backdrop-blur-xl">
+                        <div className="gradient-text font-display text-2xl font-black">3</div>
+                        <div className="text-xs font-semibold text-turbo-muted">pasos simples</div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        <section id="ventajas" className="px-8 py-20">
-          <div className="mx-auto w-full max-w-[1200px]">
-            <div data-a="">
-              <span className="section-tag">Ventajas</span>
-              <h2 className="section-title">
-                Todo lo que tu taller <span className="gradient-text">necesita</span>
-              </h2>
+        <section id="ventajas" className="relative overflow-hidden px-5 py-16 sm:px-8 lg:py-20">
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-turbo-purpleLight/35 to-transparent" />
+
+          <div className="relative mx-auto w-full max-w-[1200px]">
+            <div data-a="" className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+              <div className="max-w-2xl">
+                <span className="section-tag">Ventajas</span>
+                <h2 className="section-title">
+                  Lo esencial para <span className="gradient-text">operar más rápido</span>
+                </h2>
+                <p className="section-sub">Beneficios claros para comprar repuestos sin fricción.</p>
+              </div>
+
+              <div className="flex flex-wrap gap-2">
+                {['90 min', '24/7', '+40 marcas'].map((item) => (
+                  <span key={item} className="rounded-full border border-[rgba(107,33,232,0.35)] bg-[rgba(107,33,232,0.1)] px-4 py-2 text-sm font-bold text-turbo-text">
+                    {item}
+                  </span>
+                ))}
+              </div>
             </div>
 
-            <div data-a-stagger="" className="mt-12 grid grid-cols-1 gap-8 min-[1025px]:grid-cols-2">
+            <div data-a-stagger="" className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
               {features.map((feature) => (
-                <div
+                <article
                   key={feature.title}
-                  className={`feature-card relative overflow-hidden rounded-[20px] border border-[var(--brd)] bg-turbo-surface p-8 ${feature.wide ? 'min-[1025px]:col-span-2' : ''}`}
+                  className="group relative min-h-[176px] overflow-hidden rounded-[22px] border border-[var(--brd)] bg-[linear-gradient(145deg,rgba(22,22,42,0.88),rgba(15,15,26,0.96))] p-5 transition duration-300 hover:-translate-y-1 hover:border-turbo-purpleLight hover:shadow-glow"
                 >
-                  <div className="relative z-[1] mb-5 flex h-12 w-12 items-center justify-center rounded-xl border border-[var(--brd)] bg-[rgba(107,33,232,0.15)] text-xl">
-                    {feature.icon}
+                  <span className="absolute -right-10 -top-10 h-28 w-28 rounded-full opacity-15 blur-2xl transition duration-300 group-hover:opacity-30" style={{ backgroundColor: feature.accent }} />
+                  <div className="relative z-[1] flex h-full flex-col gap-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.05] text-2xl">
+                        {feature.icon}
+                      </div>
+                      <div className="rounded-full bg-white/[0.05] px-3 py-1 text-right">
+                        <div className="font-display text-sm font-black text-turbo-text">{feature.metric}</div>
+                        <div className="text-[0.6rem] font-bold uppercase tracking-[0.12em] text-turbo-muted">{feature.metricUnit}</div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <h3 className="font-display text-lg font-black tracking-[-0.02em] text-turbo-text">{feature.title}</h3>
+                      <p className="mt-2 text-sm leading-6 text-turbo-muted">{feature.body}</p>
+                    </div>
                   </div>
-                  <h3 className="relative z-[1] mb-2 font-display text-lg font-bold">{feature.title}</h3>
-                  <p className="relative z-[1] text-[0.9rem] leading-6 text-turbo-muted">{feature.body}</p>
-                </div>
+                </article>
               ))}
             </div>
           </div>
@@ -690,9 +833,31 @@ export default function Home() {
 
             <div data-a-stagger="" className="mt-10 grid grid-cols-2 gap-4 min-[480px]:grid-cols-3 md:grid-cols-4 min-[1025px]:grid-cols-6">
               {brands.map((brand) => (
-                <div key={brand} className="brand-pill flex cursor-default items-center justify-center rounded-xl border border-[var(--brd)] bg-turbo-surface2 px-4 py-3.5 text-sm font-bold text-turbo-subtle grayscale">
-                  {brand}
-                </div>
+                <article
+                  key={brand.name}
+                  className="group relative min-h-[124px] overflow-hidden rounded-2xl border border-[var(--brd)] bg-[linear-gradient(145deg,rgba(22,22,42,0.92),rgba(15,15,26,0.96))] p-3 transition duration-300 hover:-translate-y-1 hover:border-turbo-purpleLight hover:shadow-glow"
+                >
+                  <span className="absolute inset-x-5 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                  <span className="absolute -right-10 -top-10 h-28 w-28 rounded-full opacity-25 blur-2xl transition duration-300 group-hover:opacity-40" style={{ backgroundColor: brand.accent }} />
+                  <div className="relative flex h-full flex-col items-center justify-center gap-3 rounded-xl border border-white/5 bg-white/[0.025] px-3 py-4">
+                    <div className="flex h-14 w-full items-center justify-center">
+                      {brand.logoSlug ? (
+                        <img
+                          src={`https://cdn.simpleicons.org/${brand.logoSlug}/F1F0FF`}
+                          alt={`${brand.name} logo`}
+                          loading="lazy"
+                          className="max-h-10 max-w-[112px] object-contain opacity-85 drop-shadow-[0_0_18px_rgba(139,69,255,0.18)] transition duration-300 group-hover:scale-105 group-hover:opacity-100"
+                          onError={(event) => {
+                            event.currentTarget.style.display = 'none';
+                          }}
+                        />
+                      ) : (
+                        <MercedesMark />
+                      )}
+                    </div>
+                    <span className="text-center text-xs font-bold uppercase tracking-[0.08em] text-turbo-muted transition duration-300 group-hover:text-turbo-text">{brand.name}</span>
+                  </div>
+                </article>
               ))}
             </div>
             <p className="mt-6 text-center text-sm text-turbo-muted">
@@ -859,7 +1024,7 @@ export default function Home() {
 
         <div className="mx-auto mt-10 flex max-w-[1200px] flex-wrap items-center justify-between gap-3 border-t border-[var(--brd)] pt-6">
           <p className="text-xs text-turbo-subtle">© 2026 TurboShop. Todos los derechos reservados.</p>
-          <p className="text-xs text-turbo-subtle">Hecho con ⚡ en Chile</p>
+          <p className="text-xs text-turbo-subtle">Hecho con ❤️ por Yhona Peguero</p>
         </div>
       </footer>
 
